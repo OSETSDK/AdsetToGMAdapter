@@ -30,16 +30,10 @@
 
 // Factories keep the real loading path testable without changing production behavior.
 - (OSETNativeDataAd *)newNativeDataAdWithSlotID:(NSString *)slotID size:(CGSize)size viewController:(UIViewController *)vc {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点原生自渲染开始加载，后台下发 slotId=%@", @"<redacted>");
-#endif
     return [[OSETNativeDataAd alloc] initWithSlotId:slotID size:size rootViewController:vc];
 }
 - (OSETNativeAdRenderer *)newNativeRenderer { return [OSETNativeAdRenderer new]; }
 - (OSETNativeAd *)newNativeAdWithSlotID:(NSString *)slotID size:(CGSize)size viewController:(UIViewController *)vc {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点原生模板开始加载，后台下发 slotId=%@", @"<redacted>");
-#endif
     return [[OSETNativeAd alloc] initWithSlotId:slotID size:size rootViewController:vc];
 }
 
@@ -57,9 +51,6 @@
     }
     // Preserve existing template behavior when GroMore does not distinguish render types.
     self.selfRendering = renderType == 2;
-#if DEBUG
-    NSLog(@"hh [OSETGMNative] request renderType=%ld selfRendering=%d", (long)renderType, self.selfRendering);
-#endif
     UIViewController *vc = self.viewController ?: self.bridge.viewControllerForPresentingModalView;
     id mute = parameter[BUMAdLoadingParamNAIsMute];
     BOOL muted = [mute isKindOfClass:NSNumber.class] ? [mute boolValue] : YES;
@@ -82,9 +73,6 @@
 - (void)failLoad:(NSError *)error {
     if (self.loadFinished) { return; }
     self.loadFinished = YES;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点原生加载失败 errorCode=%ld", (long)error.code);
-#endif
     [self.bridge nativeAd:self didLoadFailWithError:error];
 }
 
@@ -115,9 +103,6 @@
     // Save ownership before the bridge can synchronously return bid/registration callbacks.
     self.nativeCreators = @[creator];
     self.loadFinished = YES;
-#if DEBUG
-    NSLog(@"hh [OSETGMNative] 奇点原生自渲染加载成功，回传 GroMore 参与竞价 video=%d", data.isVideoAd);
-#endif
     [self.bridge nativeAd:self didLoadWithNativeAds:@[ad] exts:@[OSETGmLoadingExt(data.eCPM)]];
 }
 - (void)nativeDataAdFailedToLoad:(id)nativeDataAd error:(NSError *)error {
@@ -204,9 +189,6 @@
         [views addObject:view]; [exts addObject:OSETGmLoadingExt([(OSETBaseView *)view eCPM])];
     }
     if (!views.count) { [self failLoad:[self adapterError:@"模板信息流返回空广告"]]; return; }
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点原生模板加载成功，回传 GroMore 参与竞价");
-#endif
     self.expressViews = views.copy;
     self.loadFinished = YES;
     [self.bridge nativeAd:self didLoadWithExpressViews:self.expressViews exts:exts.copy];

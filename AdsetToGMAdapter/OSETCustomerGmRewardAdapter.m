@@ -25,9 +25,6 @@
 - (void)loadRewardedVideoAdWithSlotID:(nonnull NSString *)slotID andParameter:(nonnull NSDictionary *)parameter {
     self.rewardVideoAd.delegate = nil;
     self.showing = NO;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点激励开始加载，后台下发 slotId=%@", @"<redacted>");
-#endif
     id value = parameter[BUMAdLoadingParamRVUserID];
     NSString *userId = [value isKindOfClass:NSString.class] ? value : @"";
     self.rewardVideoAd = [[OSETRewardVideoAd alloc] initWithSlotId:slotID withUserId:userId];
@@ -52,17 +49,11 @@
     OSETGmReportBidResult(self.rewardVideoAd, result);
 }
 - (void)rewardVideoDidReceiveSuccess:(nonnull id)rewardVideoAd slotId:(nonnull NSString *)slotId {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点激励加载成功，回传 GroMore 参与竞价 slotId=%@", @"<redacted>");
-#endif
     [self.bridge rewardedVideoAd:self didLoadWithExt:OSETGmLoadingExt(self.rewardVideoAd.eCPM)];
     [self.bridge rewardedVideoAdVideoDidLoad:self];
 }
 
 - (void)rewardVideoLoadToFailed:(nonnull id)rewardVideoAd error:(nonnull NSError *)error {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点激励失败 errorCode=%ld", (long)error.code);
-#endif
     if (self.showing) {
         [self.bridge rewardedVideoAdDidShowFailed:self error:error];
     } else {
@@ -84,9 +75,6 @@
 
 //激励视频开始播放
 - (void)rewardVideoPlayStart:(OSETRewardVideoAd *)rewardVideoAd checkString:(NSString *)checkString {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点激励曝光");
-#endif
     [self.bridge rewardedVideoAdDidVisible:self];
 }
 //激励视频奖励

@@ -25,22 +25,13 @@
  */
 - (void)initializeAdapterWithConfiguration:(BUMSdkInitConfig *_Nullable)initConfig {
     NSString *appId = initConfig.appID;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点初始化开始，后台下发 appId=%@", @"<redacted>");
-#endif
     self.initializationSucceeded = NO;
     if (!appId.length) {
-#if DEBUG
-        NSLog(@"hh [OSETGroMoreAdapter] 初始化失败，App ID 为空");
-#endif
         return;
     }
 
     [OSETManager configureWithAppId:appId completion:^(BOOL success, NSError *error) {
         self.initializationSucceeded = success;
-#if DEBUG
-        NSLog(@"hh [OSETGroMoreAdapter] 奇点初始化结果 appId=%@ success=%d errorCode=%ld", @"<redacted>", success, (long)error.code);
-#endif
     }];
 }
 

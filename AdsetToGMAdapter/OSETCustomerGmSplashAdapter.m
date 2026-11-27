@@ -21,7 +21,6 @@
 @end
 @implementation OSETCustomerGmSplashAdapter
 
-
 - (BUMMediatedAdStatus)mediatedAdStatus {
     BUMMediatedAdStatus status = BUMMediatedAdStatusUnknown;
     status.valid = self.splashAd.isAdValid ? BUMMediatedAdStatusValueSure : BUMMediatedAdStatusValueDeny;
@@ -54,9 +53,6 @@
     if(!window){
         window  = [UIApplication sharedApplication].keyWindow;
     }
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点开屏开始加载，后台下发 slotId=%@", @"<redacted>");
-#endif
     self.splashAd = [[OSETSplashAd alloc] initWithSlotId:slotID window:window bottomView:self.customBottomView];
     self.splashAd.delegate = self;
     [self.splashAd loadSplashAd];
@@ -78,18 +74,12 @@
 }
 #pragma mark OSETSplashAdDelegate
 - (void)splashDidReceiveSuccess:(nonnull id)splashAd slotId:(nonnull NSString *)slotId {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点开屏加载成功，回传 GroMore 参与竞价 slotId=%@", @"<redacted>");
-#endif
     if (self.dismissed || self.finished) { return; }
     // 加载广告成功
     NSInteger price = self.splashAd.eCPM;
     [self.bridge splashAd:self didLoadWithExt:OSETGmLoadingExt(price)];
 }
 - (void)splashLoadToFailed:(nonnull id)splashAd error:(nonnull NSError *)error {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点开屏失败 errorCode=%ld", (long)error.code);
-#endif
     if (self.dismissed || self.finished) { return; }
     self.finished = YES;
     if (self.showing) {
@@ -114,9 +104,6 @@
 - (void)splashAdExposured:(id)splashAd{
     if (self.dismissed || self.finished || !self.showing || self.visible) { return; }
     self.visible = YES;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点开屏曝光");
-#endif
     [self.bridge splashAdWillVisible:self];
 }
 - (void)splashAdExposuredToFailed:(id)splashAd error:(NSError *)error {

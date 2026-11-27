@@ -33,9 +33,6 @@
     self.interstitialAd.delegate = nil;
     self.showing = NO;
     self.size = size;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点插屏开始加载，后台下发 slotId=%@", @"<redacted>");
-#endif
     self.interstitialAd = [[OSETInterstitialAd alloc] initWithSlotId:slotID];
     self.interstitialAd.delegate = self;
     [self.interstitialAd loadInterstitialAdData];
@@ -55,17 +52,11 @@
 }
 
 - (void)interstitialDidReceiveSuccess:(nonnull id)interstitialAd slotId:(nonnull NSString *)slotId {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点插屏加载成功，回传 GroMore 参与竞价 slotId=%@", @"<redacted>");
-#endif
     [self.bridge interstitialAd:self didLoadWithExt:OSETGmLoadingExt(self.interstitialAd.eCPM)];
     [self.bridge interstitialAdRenderSuccess:self];
 }
 
 - (void)interstitialLoadToFailed:(nonnull id)interstitialAd error:(nonnull NSError *)error {
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点插屏失败 errorCode=%ld", (long)error.code);
-#endif
     if (self.showing) {
         [self.bridge interstitialAdDidShowFailed:self error:error];
     } else {
@@ -77,9 +68,6 @@
     [self.bridge interstitialAdDidClick:self];
 }
 -(void)interstitialExposured:(id)interstitialAd{
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点插屏曝光");
-#endif
     [self.bridge interstitialAdDidVisible:self];
 }
 - (void)interstitialDidClose:(nonnull id)interstitialAd {

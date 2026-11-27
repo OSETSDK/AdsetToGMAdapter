@@ -29,9 +29,6 @@
     CGFloat height = adSize.height > 0 ? adSize.height : 80;
     self.bannerAd = [[OSETBannerAd alloc] initWithSlotId:slotID rootViewController:controller rect:CGRectMake(0, 0, width, height)];
     self.bannerAd.delegate = self;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点 Banner 开始加载 slotId=%@", @"<redacted>");
-#endif
     [self.bannerAd loadAdData];
 }
 
@@ -48,9 +45,6 @@
         return;
     }
 
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点 Banner 加载成功，回传 GroMore 参与竞价 slotId=%@", @"<redacted>");
-#endif
     OSETBaseView *view = banner;
     self.bannerView = view;
     [self.bridge bannerAd:self didLoad:view ext:OSETGmLoadingExt(view.eCPM)];
@@ -59,9 +53,6 @@
 - (void)bannerLoadToFailed:(id)banner error:(NSError *)error {
     if (!self.bannerAd || banner != self.bannerAd) { return; }
     self.bannerView = nil;
-#if DEBUG
-    NSLog(@"hh [OSETGroMoreAdapter] 奇点 Banner 加载失败 errorCode=%ld", (long)error.code);
-#endif
     [self.bridge bannerAd:self didLoadFailWithError:error ext:@{}];
 }
 
