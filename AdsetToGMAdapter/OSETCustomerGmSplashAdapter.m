@@ -46,13 +46,7 @@
     id bottomView = parameter[BUMAdLoadingParamSPCustomBottomView];
     self.customBottomView = [bottomView isKindOfClass:[UIView class]] ? bottomView : nil;
 
-    UIWindow *window = nil;
-    if(self.bridge.viewControllerForPresentingModalView.view.window){
-        window = self.bridge.viewControllerForPresentingModalView.view.window;
-    }
-    if(!window){
-        window  = [UIApplication sharedApplication].keyWindow;
-    }
+    UIWindow *window = self.bridge.viewControllerForPresentingModalView.view.window ?: OSETGmForegroundWindow();
     self.splashAd = [[OSETSplashAd alloc] initWithSlotId:slotID window:window bottomView:self.customBottomView];
     self.splashAd.delegate = self;
     [self.splashAd loadSplashAd];
@@ -65,7 +59,7 @@
             return;
         }
         self.showing = YES;
-        // 使用展示时的窗口，不继续沿用加载阶段的 keyWindow。
+        // 使用展示时的窗口，不继续沿用加载阶段的窗口。
         [self.splashAd showSplashAdWithWindow:window bottomView:self.customBottomView];
     }else{
         NSError * error = [[NSError alloc]initWithDomain:@"广告未加载成功或已失效" code:72000 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"OSETBU"]}];

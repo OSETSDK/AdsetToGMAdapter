@@ -5,6 +5,23 @@
 #import <Adset/OSETSDK.h>
 #import <dispatch/dispatch.h>
 
+static inline UIWindow *OSETGmForegroundWindow(void) {
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if (![scene isKindOfClass:UIWindowScene.class] ||
+            scene.activationState != UISceneActivationStateForegroundActive) {
+            continue;
+        }
+        UIWindow *visibleWindow = nil;
+        for (UIWindow *window in ((UIWindowScene *)scene).windows) {
+            if (!window.rootViewController) continue;
+            if (window.isKeyWindow) return window;
+            if (!window.hidden && !visibleWindow) visibleWindow = window;
+        }
+        if (visibleWindow) return visibleWindow;
+    }
+    return nil;
+}
+
 // 协议只声明可选能力，不要求旧版 OSETSDK 导出新的方法或字段常量。
 @protocol OSETGmBiddingReporting <NSObject>
 - (void)reportBiddingWinWithInfo:(NSDictionary *)info;
